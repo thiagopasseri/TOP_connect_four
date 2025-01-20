@@ -2,8 +2,7 @@
 VOID = " "
 BALL = "\u25EF"
 SQUARE = "\u25FC"
-# N = 6
-# M = 7
+
 
 TEMPLATE = <<-HEREDOC
 
@@ -18,15 +17,41 @@ require_relative 'board_tools'
 class ConnectGame
 
   extend BoardTools
-  attr_accessor :board, :n, :m
+  attr_accessor :board, :n, :m, :player
   
 
   def initialize(board = Array.new(6){ Array.new(7, ' ')})
     @board = board.map(&:dup)
     @n = board.length
     @m = board[0].length
+    @player = 0
   end
 
+  def init 
+    until(end_game?)
+      get_play
+      display_board
+    end
+    puts "Player #{player - 1} WINS"
+  end
+
+  def get_play
+
+    puts "player #{player} -> play (1 a 7)"
+    answer = gets.chomp
+    if answer.to_i.between?(1,7)
+      play_piece(answer.to_i - 1, player)
+      puts "player: #{player}"
+      @player = 1 - @player
+    end
+  end
+
+  def end_game?
+    group = self.class.array_group(board)
+    group.any? do |array|
+      array == Array.new(CONNECT_NUMBER, BALL) || array == Array.new(CONNECT_NUMBER, SQUARE)
+    end
+  end
 
   def play_piece(col_index, player)
     line_index =  target_line(col_index)
@@ -79,77 +104,3 @@ sendo esse array o espaço amostral de todos os possiveis 4 quadradinhos (horizo
  
     HEREDOC
 
-
-
-  # def self.possible_columns(board)
-  #   n = board.length
-  #   m = board[0].length
-    
-  #   possible_columns = []
-  #   m.times do |col|
-  #     possible_columns += possible_four(board.transpose[col])
-  #   end
-  #   possible_columns
-  # end
-
-  # def self.possible_lines(board)
-  #   n = board.length
-  #   possible_lines = []
-  #   n.times do |line|
-  #     possible_lines += possible_four(board[line])
-  #   end
-  #   possible_lines
-  # end
-
-  # def self.possible_four(array)
-  #   return array.each_cons(3).to_a
-  # end
-
-
-  # def self.debug_display(array)
-  #   game = ConnectGame.new()
-  #   array.each do |item|
-  #     line = item[0].to_i
-  #     col = item[1].to_i
-  #     game.board[line][col] = "*"
-  #     # puts "line: #{line}, col: #{col}, board: #{game.board[line][col]}"
-  #   end
-  #   game.display_board
-  # end
-  
-
-  # def self.side_diagonals(index, board)
-  #   n = board.length
-
-  #   diag = []
-  #   (n - index).times do |step|
-  #     diag << (board[index + step][step])
-  #   end
-  #   diag
-  # end
-  
-  # def self.top_diagonal(index, board)
-  #   board = board.transpose
-  #   n = board.length
-
-  #   diag = []
-  #   (n - index).times do |step|
-  #     diag << (board[index + step][step])
-  #   end
-  #   diag
-  # end
-
-  # def self.center_diagonals(board)
-  #   n = board.length
-  #   m = board[0].length
-  #   possible_diagonals = []
-
-  #   (0..m-n).each do |index|
-  #     diagonal = []
-  #     n.times do |step|
-  #       diagonal << board[step][step + index]
-  #     end
-  #     possible_diagonals << diagonal
-  #   end
-  #   possible_diagonals
-  # end

@@ -44,7 +44,7 @@ describe ConnectGame do
     end
   end
 
-  describe '# target_line' do
+  describe '#target_line' do
     context 'when putting a piece in a column with 0 pieces' do
       let(:empty_column) {ConnectGame.new}
       it 'returns 5' do
@@ -82,4 +82,68 @@ describe ConnectGame do
       end
     end
   end
+  describe '#end_game?' do
+    context 'when the board is empty' do
+      let(:empty_board) {ConnectGame.new}
+
+      it 'returns false' do
+        expect(empty_board.end_game?).to eq(false)
+      end
+    end
+
+    context 'when the board has 3 consecutives ◯ na coluna 0' do
+      let(:empty_board) {ConnectGame.new}
+
+      it 'returns false' do
+        empty_board.play_piece(0,0)
+        empty_board.play_piece(0,0)
+        empty_board.play_piece(0,0)
+        expect(empty_board.end_game?).to eq(false)
+      end
+    end
+
+    context 'when the board has 4 consecutives ◯ na coluna 0' do
+      let(:empty_board) {ConnectGame.new}
+
+      it 'returns true' do
+        empty_board.play_piece(0,0)
+        empty_board.play_piece(0,0)
+        empty_board.play_piece(0,0)
+        empty_board.play_piece(0,0)
+        expect(empty_board.end_game?).to eq(true)
+      end
+    end
+
+    context 'when the board has 3 consecutives ◯ na diagonal principal' do
+      let(:empty_board) {ConnectGame.new}
+
+      it 'returns false' do
+        empty_board.board[5][0] = BALL
+        empty_board.board[4][1] = BALL
+        empty_board.board[3][2] = BALL
+
+        expect(empty_board.end_game?).to eq(false)
+      end
+    end
+
+    context 'when the board has 4 consecutives ◯ na diagonal principal' do
+      let(:empty_board) {ConnectGame.new}
+
+      it 'returns true' do
+        empty_board.board[5][0] = BALL
+        empty_board.board[4][1] = BALL
+        empty_board.board[3][2] = BALL
+        empty_board.board[2][3] = BALL
+
+        expect(empty_board.end_game?).to eq(true)
+      
+      end   
+    end
+    
+
+
+
+  end
+
+
 end

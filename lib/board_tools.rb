@@ -2,7 +2,25 @@ CONNECT_NUMBER = 4
 module BoardTools
   
   def array_group(board)
-    possible_columns(board) + possible_lines(board) + total_diagonal(board)
+    possible_columns(board) + possible_lines(board) + group_possible_four(total_diagonals(board)) + group_possible_four(total_diagonals(self.horizontal_flip(board)))
+  end
+
+  def horizontal_flip(board)
+    n = board.length
+    m = board[0].length
+
+    new_board = Array.new(n) {Array.new(m)}
+    board.each_with_index do |line, i_line|
+      line.each_with_index do |col, i_col|
+        # puts "board[#{i_line}][#{m - i_col - 1}] = #{board[i_line][m - i_col - 1]} <-> board[#{i_line}][#{i_col}] = #{board[i_line][i_col]} "
+        new_board[i_line][i_col] = board[i_line][m-i_col-1]
+        # puts "board[#{i_line}][#{i_col}] = #{new_board[i_line][i_col]}"
+
+        # DEUGAR AQUI: por que não está gerando uma matriz flipada?
+
+      end
+    end
+    new_board
   end
 
   def possible_columns(board)
