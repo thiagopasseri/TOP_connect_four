@@ -1,3 +1,4 @@
+CONNECT_NUMBER = 4
 module BoardTools
   
   def array_group(board)
@@ -25,9 +26,16 @@ module BoardTools
   end
 
   def possible_four(array)
-    return array.each_cons(3).to_a
+    return array.each_cons(CONNECT_NUMBER).to_a
   end
 
+  def group_possible_four(array_group)
+    group = []
+    array_group.each do |array|
+      group += possible_four(array)
+    end
+    group
+  end
 
   def debug_display(array)
     game = ConnectGame.new()
@@ -51,17 +59,17 @@ module BoardTools
         diag << (board[index + step][step])
         step += 1
       end
-      array << diag
+      array << diag 
     end
     array
   end
   
   def top_diagonal(board) 
     
-    n = board.length
+    n = board[0].length
     board = board.transpose
     array = []
-    (n - 1).times do |index|
+    (1..n).each do |index|
       diag = []
       step = 0
       while (board[index+step] != nil && board[index+step][step] != nil) do
@@ -88,7 +96,7 @@ module BoardTools
     possible_diagonals
   end
 
-  def total_diagonal(board)
+  def total_diagonals(board)
     side_diagonals(board) + top_diagonal(board) + center_diagonals(board) 
   end
 end
